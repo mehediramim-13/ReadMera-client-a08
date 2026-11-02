@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,14 @@ export function MyBorrowsList({ initialBorrows }: { initialBorrows: Borrow[] }) 
   const router = useRouter();
   const [borrows, setBorrows] = useState(initialBorrows);
   const [returningId, setReturningId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setBorrows(initialBorrows);
+  }, [initialBorrows]);
+
+  useEffect(() => {
+    router.refresh();
+  }, [router, router.bfcacheId]);
 
   const handleReturn = async (borrow: Borrow) => {
     setReturningId(borrow._id);
