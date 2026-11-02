@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -31,8 +31,23 @@ export function BookDetailsActions({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [alreadyBorrowed, setAlreadyBorrowed] = useState(initialAlreadyBorrowed);
+  const [borrowedState, setBorrowedState] = useState({
+    initial: initialAlreadyBorrowed,
+    value: initialAlreadyBorrowed,
+  });
   const submitting = useRef(false);
+
+  if (borrowedState.initial !== initialAlreadyBorrowed) {
+    setBorrowedState({
+      initial: initialAlreadyBorrowed,
+      value: initialAlreadyBorrowed,
+    });
+  }
+  const alreadyBorrowed = borrowedState.value;
+
+  useEffect(() => {
+    router.refresh();
+  }, [router, router.bfcacheId]);
 
   const submit = async () => {
     if (submitting.current || alreadyBorrowed || book.availableCopies < 1) return;
@@ -40,7 +55,7 @@ export function BookDetailsActions({
     setBusy(true);
     try {
       await borrowBook(book._id);
-      setAlreadyBorrowed(true);
+      setBorrowedState((current) => ({ ...current, value: true }));
       toast.success("Book borrowed successfully.");
       setOpen(false);
       router.refresh();
@@ -48,7 +63,7 @@ export function BookDetailsActions({
       const message = error instanceof Error ? error.message : "The book could not be borrowed.";
       toast.error(message);
       if (message.toLowerCase().includes("already borrowed")) {
-        setAlreadyBorrowed(true);
+        setBorrowedState((current) => ({ ...current, value: true }));
         setOpen(false);
       }
     } finally {

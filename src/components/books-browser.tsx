@@ -40,6 +40,10 @@ export function BooksBrowser({ books, initialFilters }: { books: Book[]; initial
   }, [search]);
 
   useEffect(() => {
+    router.refresh();
+  }, [router, router.bfcacheId]);
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const values: [string, string][] = [
       ["search", debouncedSearch],
