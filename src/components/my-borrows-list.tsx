@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import { BookImage } from "@/components/book-image";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { returnBook } from "@/lib/api";
 import type { Borrow } from "@/types";
 
 export function MyBorrowsList({ initialBorrows }: { initialBorrows: Borrow[] }) {
+  const router = useRouter();
   const [borrows, setBorrows] = useState(initialBorrows);
   const [returningId, setReturningId] = useState<string | null>(null);
 
@@ -21,6 +23,7 @@ export function MyBorrowsList({ initialBorrows }: { initialBorrows: Borrow[] }) 
       await returnBook(borrow._id);
       setBorrows((current) => current.filter((item) => item._id !== borrow._id));
       toast.success("Book returned successfully.");
+      router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "The book could not be returned.");
     } finally {
