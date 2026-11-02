@@ -29,7 +29,7 @@ async function BrandPanel({ searchParams }: LoginPageProps) {
 
 export default function LoginPage({ searchParams }: LoginPageProps) {
   return (
-    <div className="mx-auto flex min-h-svh w-full max-w-6xl flex-1 flex-col justify-center px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/60 shadow-2xl backdrop-blur-xl lg:grid lg:grid-cols-12">
         <div className="flex flex-col lg:col-span-6 xl:col-span-6">
           <Suspense
